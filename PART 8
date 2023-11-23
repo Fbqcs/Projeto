@@ -1,0 +1,28 @@
+if opcao == "1":
+            gasto_total = cadastrar_livro(gasto_total)
+        elif opcao == "2":
+            visualizar_livros()
+        elif opcao == "3":
+            visualizar_por_categoria()
+        elif opcao == "4":
+            gasto_total = atualizar_livro(gasto_total)
+        elif opcao == "5":
+            gasto_total = excluir_livro(gasto_total)
+        elif opcao == "6":
+            gasto_total = calcular_gasto_total()
+            print(f"O gasto total é: R${gasto_total}")
+        elif opcao == "7":
+            visualizar_por_cor()  
+        elif opcao == "8":
+            print("Saindo do programa. Até mais!")
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
+if _name_ == "_main_":
+    arquivo_path = "livros.txt"
+
+    if not os.path.exists(arquivo_path):
+        open(arquivo_path, "w").close()
+
+    menu()
