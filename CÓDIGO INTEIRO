@@ -1,0 +1,172 @@
+import os
+def calcular_gasto_total():
+    gasto_total = 0
+    arquivo = open("livros.txt", "r")
+    for linha in arquivo:
+        _, _, _, custo, _, = linha.strip().split(',')
+        gasto_total += float(custo)
+    arquivo.close()
+    return gasto_total
+
+def cadastrar_livro(gasto_total):
+    nome = input("Digite o nome do livro: ")
+    autor = input("Digite o nome do autor: ")
+    categoria = input("Digite a categoria do livro: ")
+    custo = float(input("Digite o valor do livro: "))
+    cor = input("Digite a cor do livro: ") 
+
+    arquivo = open("livros.txt", "a")
+    arquivo.write(f"{nome},{autor},{categoria},{custo},{cor}\n")
+    arquivo.close()
+
+    return gasto_total + custo
+
+def visualizar_livros():
+    arquivo = open("livros.txt", "r")
+    for linha in arquivo:
+        nome, autor, categoria, custo, cor  = linha.strip().split(',')
+        print(f"Nome: {nome}, Autor: {autor}, Categoria: {categoria}, Custo: R${custo}, {cor}")
+    arquivo.close()
+
+def visualizar_por_categoria():
+    categoria_desejada = input("Digite a categoria que deseja visualizar: ")
+    livros_encontrados = False
+
+    arquivo = open("livros.txt", "r")
+    for linha in arquivo:
+        nome, autor, categoria, custo, cor = linha.strip().split(',')
+        if categoria == categoria_desejada:
+            print(f"Nome: {nome}, Autor: {autor}, Categoria: {categoria}, Custo: R${custo}, {cor}")
+            livros_encontrados = True
+
+    arquivo.close()
+
+    if not livros_encontrados:
+        print(f"Nenhum livro encontrado na categoria '{categoria_desejada}'.")
+
+def atualizar_livro(gasto_total):
+    nome_atualizar = input("Digite o nome do livro que deseja atualizar: ")
+    livro_atualizado = False
+    temp_gasto_total = 0
+
+    arquivo = open("livros.txt", "r")
+    linhas = arquivo.readlines()
+    arquivo.close()
+
+    arquivo = open("livros.txt", "w")
+    for linha in linhas:
+        nome, autor, categoria, custo, cor = linha.strip().split(',')
+        if nome == nome_atualizar:
+            autor = input("Digite o novo nome do autor: ")
+            categoria = input("Digite a nova categoria do livro: ")
+            novo_custo = float(input("Digite o novo valor do livro: "))
+            cor = input("Digite a nova cor do livro: ")
+            linha = f"{nome},{autor},{categoria},{novo_custo}, {cor}\n"
+            temp_gasto_total += novo_custo
+            livro_atualizado = True
+        arquivo.write(linha)
+    for linha in linhas:
+        _, _, _, custo, _, = linha.strip().split(',')
+        temp_gasto_total += float(custo)
+    arquivo.close()
+
+    if livro_atualizado:
+        print("Livro atualizado com sucesso!")
+        return temp_gasto_total
+    else:
+        print("Livro não encontrado.")
+        return gasto_total
+
+
+def visualizar_por_cor():
+    cor_desejada = input("Digite a cor que deseja visualizar: ")
+    livros_encontrados = False
+
+    arquivo = open("livros.txt", "r")
+    for linha in arquivo:
+        nome, autor, categoria, custo, cor = linha.strip().split(',')
+        if cor == cor_desejada: 
+            print(f"Nome: {nome}, Autor: {autor}, Categoria: {categoria}, Custo: R${custo}, Cor: {cor}")
+            livros_encontrados = True
+
+    arquivo.close()
+
+    if not livros_encontrados:
+        print(f"Nenhum livro encontrado na cor '{cor_desejada}'.")
+
+
+
+def excluir_livro(gasto_total):
+    nome_excluir = input("Digite o nome do livro que deseja excluir: ")
+    livro_excluido = False
+
+    arquivo = open("livros.txt", "r")
+    linhas = arquivo.readlines()
+    arquivo.close()
+
+    arquivo = open("livros.txt", "w")
+    for linha in linhas:
+        nome, _, _, custo, _, = linha.strip().split(',')
+        if nome != nome_excluir:
+            arquivo.write(linha)
+        else:
+            livro_excluido = True
+
+    if livro_excluido:
+        custo_excluido = float(custo)
+        print("Livro excluído com sucesso!")
+        return gasto_total - custo_excluido
+    else:
+        print("Livro não encontrado.")
+        return gasto_total
+
+def visualizar_livros():
+    arquivo = open("livros.txt", "r")
+    for linha in arquivo:
+        nome, autor, categoria, custo, cor = linha.strip().split(',')
+        print(f"Nome: {nome}, Autor: {autor}, Categoria: {categoria}, Custo: R${custo}, Cor: {cor}")
+    arquivo.close()
+
+def menu():
+    gasto_total = 0
+    while True:
+        print("\n -----Menu-----")
+        print("1. Cadastrar Livro")
+        print("2. Visualizar Livros")
+        print("3. Visualizar por Categoria")
+        print("4. Atualizar Livro")
+        print("5. Excluir Livro")
+        print("6. Gasto Total")
+        print("7. Visualizar por Cor")  
+        print("8. Sair")
+
+        opcao = input("Digite a opção desejada: ")
+
+        if opcao == "1":
+            gasto_total = cadastrar_livro(gasto_total)
+        elif opcao == "2":
+            visualizar_livros()
+        elif opcao == "3":
+            visualizar_por_categoria()
+        elif opcao == "4":
+            gasto_total = atualizar_livro(gasto_total)
+        elif opcao == "5":
+            gasto_total = excluir_livro(gasto_total)
+        elif opcao == "6":
+            gasto_total = calcular_gasto_total()
+            print(f"O gasto total é: R${gasto_total}")
+        elif opcao == "7":
+            visualizar_por_cor()  
+        elif opcao == "8":
+            print("Saindo do programa. Até mais!")
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
+if __name__== "__main__":
+    arquivo_path = "livros.txt"
+
+    if not os.path.exists(arquivo_path):
+        open(arquivo_path, "w").close()
+
+    menu()
